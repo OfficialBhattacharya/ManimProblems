@@ -1,0 +1,2 @@
+@echo off
+git filter-branch --force --index-filter "git rm --cached --ignore-unmatch miktex-installer.exe manim_venv/Scripts/ffmpeg.exe manim_venv/Scripts/ffplay.exe manim_venv/Scripts/ffprobe.exe" --prune-empty --tag-name-filter cat -- --all 

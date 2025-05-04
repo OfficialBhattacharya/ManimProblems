@@ -24,6 +24,7 @@ __pycache__/
 _minted-*
 *.pygtex
 *.pygstyle
+miktex-installer.exe
 
 # Windows specific
 Thumbs.db
