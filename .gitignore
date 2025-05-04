@@ -1,0 +1,51 @@
+# Manim output files
+media/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# MikTeX related files
+*.aux
+*.log
+*.pdf
+*.dvi
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.toc
+*.bbl
+*.blg
+*.out
+*.lot
+*.lof
+*.nav
+*.snm
+*.vrb
+_minted-*
+*.pygtex
+*.pygstyle
+
+# Windows specific
+Thumbs.db
+desktop.ini
+
+# Manim caches and temp files
+.manim/
+manim.cfg
+
+# IDE specific files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Environment
+venv/
+env/
+.env/
+manim_venv/
+
+# Large files
+manim_venv/Scripts/ffmpeg.exe
+manim_venv/Scripts/ffplay.exe
+manim_venv/Scripts/ffprobe.exe 
