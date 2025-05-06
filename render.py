@@ -1,13 +1,12 @@
 #!/usr/bin/env python
 import argparse
 from manim import *
-from correlation_regular_polygon import CorrelationOnRegularPolygon, RotatingRegressionLine
 from complex_unity_correlation import ComplexUnityCorrelation
 
 def main():
-    parser = argparse.ArgumentParser(description='Render Manim animations for regular polygon correlation.')
-    parser.add_argument('--scene', type=str, choices=['correlation', 'regression', 'complex_unity', 'all'], 
-                        default='correlation', help='Which scene to render')
+    parser = argparse.ArgumentParser(description='Render Manim animations for complex roots of unity.')
+    parser.add_argument('--scene', type=str, choices=['complex_unity', 'all'], 
+                        default='complex_unity', help='Which scene to render')
     parser.add_argument('--quality', type=str, choices=['low', 'medium', 'high'], 
                         default='medium', help='Rendering quality')
     parser.add_argument('--preview', action='store_true', help='Open the rendered video after completion')
@@ -43,16 +42,6 @@ def main():
     config.frame_width = config.frame_height * 16/9  # Maintain 16:9 aspect ratio
     
     # Render the requested scenes
-    if args.scene in ['correlation', 'all']:
-        print("Rendering correlation scene...")
-        scene = CorrelationOnRegularPolygon()
-        scene.render()
-    
-    if args.scene in ['regression', 'all']:
-        print("Rendering regression scene...")
-        scene = RotatingRegressionLine()
-        scene.render()
-    
     if args.scene in ['complex_unity', 'all']:
         print("Rendering complex unity correlation scene...")
         scene = ComplexUnityCorrelation()

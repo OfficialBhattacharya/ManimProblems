@@ -70,8 +70,9 @@ class ComplexUnityCorrelation(Scene):
         self.bring_to_front(self.border)
     
     def introduction(self):
-        title = Text("Complex Roots of Unity & Correlation", font_size=56)  # Larger font size
-        subtitle = Text("Connecting Complex Analysis and Statistics", font_size=42)  # Larger font size
+        self.clear()  # Remove lingering objects
+        title = Text("Observations about Correlation", font_size=56)  # Larger font size
+        subtitle = Text("Episode-1 : Correlation of not-so random points", font_size=36)  # Larger font size
         
         # Better spacing for 16:9 ratio
         VGroup(title, subtitle).arrange(DOWN, buff=0.7).center()
@@ -85,124 +86,105 @@ class ComplexUnityCorrelation(Scene):
         self.bring_to_front(self.border)
     
     def explain_complex_roots(self):
-        # Title
+        self.clear()  # Remove lingering objects
+        # Title (will go in right pane)
         title = MathTex(r"\text{Complex Roots of Unity: } z^n = 1", font_size=42)
         title.to_edge(UP)
-        self.play(Write(title))
-        
-        # Setup complex plane with wider dimensions for 16:9 aspect ratio
+
+        # Setup complex plane for left pane
         plane = ComplexPlane(
-            x_range=[-2.5, 2.5, 1],  # Wider x-range
+            x_range=[-2.5, 2.5, 1],
             y_range=[-2, 2, 1],
-            x_length=8,  # Wider x-length
-            y_length=6
+            x_length=5.5,  # Slightly smaller to fit double pane
+            y_length=4.5
         ).add_coordinates()
-        self.play(Create(plane))
-        
-        # Add labels for real and imaginary axes with better positioning
-        re_label = MathTex(r"\text{Re}(z)", font_size=28).next_to(plane.x_axis.get_end(), RIGHT)
-        im_label = MathTex(r"\text{Im}(z)", font_size=28).next_to(plane.y_axis.get_end(), UP)
-        self.play(Write(re_label), Write(im_label))
-        
-        # Explain n-th roots of unity for increasing values of n
+
+        # Axis labels, moved inside axes
+        re_label = MathTex(r"\text{Re}(z)", font_size=22).next_to(plane.x_axis.get_end(), RIGHT, buff=-0.3)
+        im_label = MathTex(r"\text{Im}(z)", font_size=22).next_to(plane.y_axis.get_end(), UP, buff=-0.3)
+
+        # Group for left pane
+        left_pane = VGroup(plane, re_label, im_label)
+        left_pane.arrange(DOWN, buff=0.1)
+        left_pane.shift(LEFT * 2.5)
+
+        # Prepare right pane (will update contents in loop)
+        current_right_pane = VGroup()
+        current_right_pane.arrange(DOWN, buff=0.5)
+        current_right_pane.shift(RIGHT * 2.5)
+
+        # Show both panes
+        self.play(FadeIn(left_pane))
+        self.wait(0.5)
+        self.play(Write(title))
+        self.wait(0.5)
+
+        # Animate n-th roots of unity for n=3 to n=8
         for n in range(3, 9):
-            # Create roots of unity
-            points = []
-            for k in range(n):
-                angle = 2 * np.pi * k / n
-                point = np.array([np.cos(angle), np.sin(angle), 0])
-                points.append(point)
-            
-            # Visualize the points with improved colors
-            dots = VGroup(*[Dot(plane.c2p(*p[:2]), color=BLUE, radius=0.08) for p in points])  # Larger dots
+            points = [np.array([np.cos(2 * np.pi * k / n), np.sin(2 * np.pi * k / n), 0]) for k in range(n)]
+            dots = VGroup(*[Dot(plane.c2p(*p[:2]), color=BLUE, radius=0.08) for p in points])
             lines = VGroup(*[Line(plane.c2p(0, 0), plane.c2p(*p[:2]), color=RED) for p in points])
             polygon = Polygon(*[plane.c2p(*p[:2]) for p in points], color=GREEN)
-            
-            # Create LaTeX formula for the roots with increased font size
+
             formula = MathTex(
                 r"z_k = e^{i\frac{2\pi k}{" + str(n) + r"}}, \; k = 0,1,\ldots," + str(n-1),
-                font_size=36  # Larger font size
+                font_size=32
             )
-            # Better positioning for 16:9 ratio
-            formula.next_to(plane, DOWN, buff=0.6)
-            
-            # Show n-th roots with larger font
-            n_label = Text(f"{n}-th roots of unity", font_size=36)
-            n_label.next_to(title, DOWN, buff=0.5)
-            
-            if n == 3:  # First iteration
-                self.play(
-                    Create(dots),
-                    Create(lines),
-                    Create(polygon),
-                    Write(n_label),
-                    Write(formula)
-                )
+            n_label = Text(f"{n}-th roots of unity", font_size=32)
+
+            if n == 3:
+                # First iteration: show n_label, formula (no title in right pane)
+                new_right = VGroup(n_label, formula).arrange(DOWN, buff=0.4)
+                new_right.shift(RIGHT * 2.5)
+                self.play(Create(dots), Create(lines), Create(polygon), Write(n_label), Write(formula))
+                self.play(Transform(current_right_pane, new_right))
+                self.wait(1)
+                # Explicitly fade out the first right pane before proceeding
+                self.play(FadeOut(current_right_pane))
+                current_right_pane = VGroup()  # Reset for next iteration
             else:
+                # Only n_label and formula in right pane
+                new_right = VGroup(n_label, formula).arrange(DOWN, buff=0.4)
+                new_right.shift(RIGHT * 2.5)
                 self.play(
                     ReplacementTransform(old_dots, dots),
                     ReplacementTransform(old_lines, lines),
                     ReplacementTransform(old_polygon, polygon),
-                    ReplacementTransform(old_n_label, n_label),
-                    ReplacementTransform(old_formula, formula)
+                    ReplacementTransform(current_right_pane, new_right)
                 )
-            
-            self.wait(1)
-            
-            # Save for next iteration
-            old_dots = dots
-            old_lines = lines
-            old_polygon = polygon
-            old_n_label = n_label
-            old_formula = formula
-            
-        # Show the sum of roots formula with larger font size
+                self.wait(1)
+                current_right_pane = new_right
+            old_dots, old_lines, old_polygon = dots, lines, polygon
+
+        # Sum formulas (right pane, no title)
         sum_formula = MathTex(
             r"\sum_{k=0}^{n-1} e^{i\frac{2\pi k}{n}} = 0, \; \forall n \geq 2",
-            font_size=38  # Larger font size
+            font_size=30
         )
-        sum_formula.next_to(old_formula, DOWN, buff=0.6)
-        self.play(Write(sum_formula))
-        
-        # Explain real and imaginary components with larger fonts
         real_sum = MathTex(
             r"\sum_{k=0}^{n-1} \cos\left(\frac{2\pi k}{n}\right) = 0",
-            font_size=34  # Larger font size
+            font_size=28
         )
         imag_sum = MathTex(
             r"\sum_{k=0}^{n-1} \sin\left(\frac{2\pi k}{n}\right) = 0",
-            font_size=34  # Larger font size
+            font_size=28
         )
-        
-        # Better spacing for 16:9 ratio
-        VGroup(real_sum, imag_sum).arrange(DOWN, buff=0.6)
-        VGroup(real_sum, imag_sum).next_to(sum_formula, DOWN, buff=0.7)
-        
-        self.play(Write(real_sum))
-        self.play(Write(imag_sum))
-        
-        self.wait(3)  # Longer wait time
-        
-        # Clean up
+        sum_group = VGroup(sum_formula, real_sum, imag_sum).arrange(DOWN, buff=0.3)
+        sum_group.shift(RIGHT * 2.5)
+        self.play(Transform(current_right_pane, sum_group))
+        self.wait(3)
+
+        # Clean up: fade out both panes, using the last displayed right pane
         self.play(
-            FadeOut(title),
-            FadeOut(plane),
-            FadeOut(re_label),
-            FadeOut(im_label),
-            FadeOut(old_dots),
-            FadeOut(old_lines),
-            FadeOut(old_polygon),
-            FadeOut(old_n_label),
-            FadeOut(old_formula),
-            FadeOut(sum_formula),
-            FadeOut(real_sum),
-            FadeOut(imag_sum)
+            FadeOut(left_pane),
+            FadeOut(current_right_pane)
         )
-        
+        self.wait(0.2)
         # Make sure the border stays on top
         self.bring_to_front(self.border)
     
     def correlation_and_regression(self):
+        self.clear()  # Remove lingering objects
         # Title
         title = MathTex(r"\text{Correlation \& Regression for Regular Polygons}", font_size=42)
         title.to_edge(UP)
@@ -366,6 +348,7 @@ class ComplexUnityCorrelation(Scene):
         self.bring_to_front(self.border)
     
     def mathematical_explanation(self):
+        self.clear()  # Remove lingering objects
         # Title
         title = MathTex(r"\text{Mathematical Proof}", font_size=42)
         title.to_edge(UP)
@@ -451,6 +434,7 @@ class ComplexUnityCorrelation(Scene):
         self.bring_to_front(self.border)
     
     def conclusion(self):
+        self.clear()  # Remove lingering objects
         # Conclusion
         conclusion_title = MathTex(r"\text{Conclusion}", font_size=42)
         conclusion_title.to_edge(UP)
@@ -462,7 +446,6 @@ class ComplexUnityCorrelation(Scene):
             &\text{1. Regular polygons correspond to roots of unity in the complex plane.} \\[0.5em]
             &\text{2. The sum of all roots of unity is always zero.} \\[0.5em]
             &\text{3. The correlation between $x$ and $y$ coordinates is always zero.} \\[0.5em]
-            &\text{4. This connects complex analysis, geometry, and statistics.}
             \end{aligned}
             """,
             font_size=36  # Increased font size for better readability
@@ -479,8 +462,8 @@ class ComplexUnityCorrelation(Scene):
         self.play(FadeOut(conclusion_title), FadeOut(conclusion_text))
         
         # Final title with improved positioning
-        final_title = MathTex(r"\text{Complex Unity \& Correlation}", font_size=52)  # Larger font size
-        subtitle = MathTex(r"\text{Where Mathematics Converges}", font_size=40)  # Larger font size
+        final_title = MathTex(r"\text{CHorizon}", font_size=52)  # Larger font size
+        subtitle = MathTex(r"\text{Where Concepts Converge}", font_size=40)  # Larger font size
         
         # Position in center of the 16:9 frame
         VGroup(final_title, subtitle).arrange(DOWN, buff=0.6).center()

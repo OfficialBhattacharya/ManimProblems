@@ -1,92 +1,66 @@
-# Manim Correlation Animation
+# Manim Mathematical Animations
 
-This project uses the Manim library to create animations demonstrating that the correlation of points on a regular polygon in a 2D plane is 0.
+This project contains mathematical animations created using Manim, focusing on the relationship between regular polygons and correlation.
 
-## Animations
+## Available Animations
 
-The project contains two main animations:
-
-1. **CorrelationOnRegularPolygon**: Demonstrates that the correlation between x and y coordinates of vertices of any regular polygon is exactly zero.
-
-2. **RotatingRegressionLine**: Shows how the regression line behaves when rotating a regular polygon, demonstrating that it rotates at half the rate of the polygon.
+1. **CorrelationOnRegularPolygon**: Demonstrates how regular polygons have zero correlation between their x and y coordinates.
+2. **RotatingRegressionLine**: Shows the behavior of regression lines on rotating regular polygons.
+3. **ComplexUnityCorrelation**: An animation explaining the connection between complex roots of unity and the zero correlation property of regular polygons.
 
 ## Requirements
 
-- Python 3.7 or higher
-- Manim Community Edition
-- NumPy
-- SciPy
+- Python 3.8+
+- Manim
+- LaTeX (for mathematical expressions)
+- Dependencies:
+  - manim>=0.17.2
+  - numpy==1.26.4
+  - scipy==1.12.0
 
-## Virtual Environment Setup
+## Installation
 
-This project uses a Python virtual environment to manage dependencies:
-
-1. Create a virtual environment:
-   ```
-   python -m venv manim_venv
-   ```
-
-2. Activate the virtual environment:
-   - Windows: 
-     ```
-     .\manim_venv\Scripts\Activate.ps1
-     ```
-   - Linux/Mac: 
-     ```
-     source manim_venv/bin/activate
-     ```
-
-3. Install dependencies:
-   ```
+1. Clone this repository
+2. Install the required dependencies:
+   ```bash
    pip install -r requirements.txt
    ```
+3. Install LaTeX if not already installed (required for mathematical expressions)
 
-## Running the animations
+## Usage
 
 ### Using the render script
 
 The easiest way to render the animations is using the render.py script:
 
-```
+```bash
 python render.py --scene correlation --quality medium --preview
 ```
 
-Options:
-- `--scene`: Which animation to render ('correlation', 'regression', or 'both')
-- `--quality`: Rendering quality ('low', 'medium', or 'high')
-- `--preview`: Open the video after rendering
+Available options:
+- `--scene`: Which animation to render ('correlation', 'regression', 'complex_unity', or 'all')
+- `--quality`: Rendering quality ('low', 'medium', 'high')
+- `--preview`: Open the rendered video after completion
 
-### Using Manim directly
+### Manual rendering
 
-You can also use Manim commands directly:
+You can also render individual scenes directly using Manim:
 
-```
+```bash
+# Basic animations
 manim -pql correlation_regular_polygon.py CorrelationOnRegularPolygon
 manim -pql correlation_regular_polygon.py RotatingRegressionLine
+manim -pql complex_unity_correlation.py ComplexUnityCorrelation
 ```
 
-Or using the main.py script:
+## Features
 
-```
-python main.py
-```
+- High-quality mathematical animations
+- Clear visualization of mathematical concepts
+- Support for different rendering qualities
+- Preview option for immediate feedback
+- Consistent frame dimensions across all scenes
 
-## Video Output
+## License
 
-All rendered videos are saved to the `./videos` directory.
-
-## Configuration
-
-You can modify the resolution and frame rate in main.py or render.py by changing the config settings.
-
-## Mathematical Background
-
-The animations demonstrate two key mathematical properties:
-
-1. The correlation between x and y coordinates of points on a regular polygon is exactly zero.
-
-2. When rotating a regular polygon, its regression line rotates at exactly half the rate of the polygon's rotation.
-
-These properties arise from the symmetrical arrangement of points on regular polygons and the mathematical properties of sine and cosine functions.
-
-For a detailed mathematical explanation, see the [mathematical_explanation.md](mathematical_explanation.md) file.
+This project is licensed under the MIT License - see the LICENSE file for details.

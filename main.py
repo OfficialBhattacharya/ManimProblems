@@ -1,5 +1,4 @@
 from manim import *
-from correlation_regular_polygon import CorrelationOnRegularPolygon, RotatingRegressionLine
 from complex_unity_correlation import ComplexUnityCorrelation
 
 if __name__ == "__main__":
@@ -17,20 +16,6 @@ if __name__ == "__main__":
     config.frame_height = 8.0  # Adjust frame height for better scaling
     config.frame_width = config.frame_height * 16/9  # Maintain 16:9 aspect ratio
     
-    # Choose which scene to render
-    scene_to_render = "complex_unity"  # Options: "correlation", "regression", "complex_unity"
-    
-    if scene_to_render == "correlation":
-        # Render the scene about correlation
-        scene = CorrelationOnRegularPolygon()
-        scene.render()
-    elif scene_to_render == "regression":
-        # Render the scene about regression lines
-        scene = RotatingRegressionLine()
-        scene.render()
-    elif scene_to_render == "complex_unity":
-        # Render the scene about complex unity and correlation
-        scene = ComplexUnityCorrelation()
-        scene.render()
-    else:
-        print("Invalid scene selection. Choose 'correlation', 'regression', or 'complex_unity'.") 
+    # Render the complex unity correlation scene
+    scene = ComplexUnityCorrelation()
+    scene.render() 
